@@ -144,8 +144,6 @@ static int tfa98xx_run_calibration(struct tfa98xx *tfa98xx);
 
 static enum tfa98xx_error tfa98xx_set_tfadsp_bypass(struct tfa_device *tfa);
 
-static enum tfa98xx_error tfa98xx_read_reference_temp(short *value);
-
 static void tfa98xx_set_dsp_configured(struct tfa98xx *tfa98xx);
 
 struct tfa98xx_rate {
@@ -1568,7 +1566,7 @@ static int tfa98xx_run_calibration(struct tfa98xx *tfa98xx0)
 	return 0;
 }
 
-static enum tfa98xx_error tfa98xx_read_reference_temp(short *value)
+enum tfa98xx_error tfa98xx_read_reference_temp(short *value)
 {
 	struct power_supply *psy = NULL;
 	union power_supply_propval prop_read = {0};
@@ -5408,7 +5406,7 @@ enum tfa98xx_error tfa_get_vval_data_channel(int channel, uint16_t *value)
 EXPORT_SYMBOL(tfa_get_vval_data_channel);
 
 
-static int tfa_get_power_state(int index)
+int tfa_get_power_state(int index)
 {
 	struct tfa_device *tfa = tfa98xx_get_tfa_device_from_index(index);
 	int pm = 0;
