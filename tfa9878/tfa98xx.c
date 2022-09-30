@@ -4042,10 +4042,10 @@ static int _tfa98xx_mute(struct tfa98xx *tfa98xx, int mute, int stream)
 			mute,
 			tfa98xx->pstream, tfa98xx->cstream, tfa98xx->samstream);
 
-		if (tfa98xx_count_active_stream(BIT_PSTREAM)
-			== tfa98xx_device_count
-			&& tfa98xx_count_active_stream(BIT_CSTREAM)
-			== tfa98xx_device_count) /* at first mute of either */
+		if ((tfa98xx_count_active_stream(BIT_PSTREAM)
+			== tfa98xx_device_count)
+			&& (tfa98xx_count_active_stream(BIT_CSTREAM)
+			== tfa98xx_device_count)) /* at first mute of either */
 			if (tfa98xx->tfa->blackbox_enable
 				&& !tfa98xx->tfa->unset_log) {
 				/* get logging once
@@ -4098,6 +4098,13 @@ static int _tfa98xx_mute(struct tfa98xx *tfa98xx, int mute, int stream)
 			|((tfa98xx->cstream<<1) & BIT_CSTREAM)
 			|((tfa98xx->samstream<<2) & BIT_SAMSTREAM));
 		mutex_unlock(&tfa98xx->dsp_lock);
+
+		if (tfa98xx->tfa->set_active == 0) {
+			pr_info("%s: skip unmuting device %d, if it's forced to set inactive\n",
+				__func__, tfa98xx->tfa->dev_idx);
+			tfa98xx->tfa->unset_log = 1;
+			return 0;
+		}
 
 		/* case: either p/cstream (both) or samstream is on
 		 * if ((tfa98xx->pstream != 0 && tfa98xx->cstream != 0)
