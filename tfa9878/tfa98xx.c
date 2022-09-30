@@ -4043,7 +4043,9 @@ static int _tfa98xx_mute(struct tfa98xx *tfa98xx, int mute, int stream)
 			tfa98xx->pstream, tfa98xx->cstream, tfa98xx->samstream);
 
 		if (tfa98xx_count_active_stream(BIT_PSTREAM)
-			== tfa98xx_device_count) /* at first device */
+			== tfa98xx_device_count
+			&& tfa98xx_count_active_stream(BIT_CSTREAM)
+			== tfa98xx_device_count) /* at first mute of either */
 			if (tfa98xx->tfa->blackbox_enable
 				&& !tfa98xx->tfa->unset_log) {
 				/* get logging once
