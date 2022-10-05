@@ -43,7 +43,6 @@ static ssize_t sknt_r_store(struct device *dev,
 static DEVICE_ATTR_RW(sknt_r);
 #endif /* TFA_STEREO_NODE */
 
-
 static struct attribute *tfa_stc_attr[] = {
 	&dev_attr_spkt.attr,
 	&dev_attr_sknt.attr,
@@ -175,7 +174,6 @@ static ssize_t sknt_store(struct device *dev,
 
 	return size;
 }
-
 
 #if defined(TFA_STEREO_NODE)
 static ssize_t spkt_r_show(struct device *dev,

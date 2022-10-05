@@ -5416,7 +5416,6 @@ enum tfa98xx_error tfa_get_vval_data_channel(int channel, uint16_t *value)
 }
 EXPORT_SYMBOL(tfa_get_vval_data_channel);
 
-
 int tfa_get_power_state(int index)
 {
 	struct tfa_device *tfa = tfa98xx_get_tfa_device_from_index(index);
