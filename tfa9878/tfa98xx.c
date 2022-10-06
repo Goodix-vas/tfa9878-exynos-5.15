@@ -3428,8 +3428,8 @@ static void tfa98xx_container_loaded
 
 	if (!cont) {
 		pr_err("Failed to read %s\n", fw_name);
-		mutex_unlock(&probe_lock);
 		tfa98xx->dsp_fw_state = TFA98XX_DSP_FW_FAIL;
+		mutex_unlock(&probe_lock);
 		return;
 	}
 
@@ -3442,8 +3442,8 @@ static void tfa98xx_container_loaded
 			mutex_unlock(&tfa98xx_mutex);
 			release_firmware(cont);
 			pr_err("Error allocating memory\n");
-			mutex_unlock(&probe_lock);
 			tfa98xx->dsp_fw_state = TFA98XX_DSP_FW_FAIL;
+			mutex_unlock(&probe_lock);
 			return;
 		}
 
@@ -3464,8 +3464,8 @@ static void tfa98xx_container_loaded
 			mutex_unlock(&tfa98xx_mutex);
 			kfree(container);
 			dev_err(tfa98xx->dev, "Cannot load container file, aborting\n");
-			mutex_unlock(&probe_lock);
 			tfa98xx->dsp_fw_state = TFA98XX_DSP_FW_FAIL;
+			mutex_unlock(&probe_lock);
 			return;
 		}
 
@@ -3485,6 +3485,7 @@ static void tfa98xx_container_loaded
 		pr_info("%s: Reloaded (%d) - dev %d\n",
 			__func__, tfa98xx_cnt_reload, tfa98xx->tfa->dev_idx);
 		tfa98xx->dsp_fw_state = TFA98XX_DSP_FW_OK;
+		mutex_unlock(&probe_lock);
 		return;
 	}
 
