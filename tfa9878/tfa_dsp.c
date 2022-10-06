@@ -1662,7 +1662,6 @@ enum tfa98xx_error dsp_msg_read(struct tfa_device *tfa,
 	int i;
 	int length = length24;
 	unsigned char *bytes = bytes24;
-	int buf_p_index = -1;
 
 	if (tfa98xx_count_active_stream(BIT_PSTREAM) == 0) {
 		pr_info("%s: skip if PSTREAM is lost\n", __func__);
@@ -1672,16 +1671,7 @@ enum tfa98xx_error dsp_msg_read(struct tfa_device *tfa,
 
 	if (tfa->convert_dsp32) {
 		length = 4 * length24 / 3;
-		buf_p_index = tfa98xx_buffer_pool_access
-			(-1, length, &bytes, POOL_GET);
-		if (buf_p_index != -1) {
-			pr_debug("%s: allocated from buffer_pool[%d] for 8 KB\n",
-				__func__, buf_p_index);
-		} else {
-			bytes = kmalloc(length, GFP_KERNEL);
-			if (bytes == NULL)
-				return TFA98XX_ERROR_FAIL;
-		}
+		bytes = kmem_cache_alloc(tfa->cachep, GFP_KERNEL);
 	}
 
 	if (tfa->has_msg == 0) { /* via i2c */
@@ -1719,13 +1709,8 @@ enum tfa98xx_error dsp_msg_read(struct tfa_device *tfa,
 
 	tfa->individual_msg = 0;
 
-	if (tfa->convert_dsp32) {
-		if (buf_p_index != -1)
-			buf_p_index = tfa98xx_buffer_pool_access
-				(buf_p_index, 0, &bytes, POOL_RETURN);
-		else
-			kfree(bytes);
-	}
+	if (tfa->convert_dsp32)
+		kmem_cache_free(tfa->cachep, bytes);
 
 	return error;
 }
