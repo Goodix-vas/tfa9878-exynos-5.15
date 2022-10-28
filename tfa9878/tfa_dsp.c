@@ -3025,6 +3025,8 @@ enum tfa98xx_error tfa_set_calibration_values(struct tfa_device *tfa)
 
 	/* If calibration is set to once we load from MTP, else send zero's */
 	if (need_cal == 0) {
+		tfa98xx_set_tfadsp_bypass(tfa);
+
 		pr_info("%s: last dev %d - MTPEX=%d\n",
 			__func__, tfa->dev_idx, tfa->mtpex);
 
