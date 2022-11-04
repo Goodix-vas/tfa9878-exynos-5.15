@@ -285,4 +285,3 @@ void tfa98xx_stc_exit(struct class *tfa_class)
 	device_destroy(tfa_class, DEV_ID_TFA_STC);
 	pr_info("exited\n");
 }
-
