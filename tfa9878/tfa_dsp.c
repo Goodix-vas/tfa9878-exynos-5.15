@@ -3213,10 +3213,11 @@ enum tfa98xx_error tfa_run_speaker_boost(struct tfa_device *tfa,
 	 * to indicate all messages are sent
 	 */
 	if (value)
-		if (tfa->ext_dsp == 1)
+		if (tfa->ext_dsp == 1) {
 			if (tfa_count_status_flag(tfa, TFA_SET_CONFIG) > 0)
 				tfa98xx_set_tfadsp_bypass(tfa);
 			err = tfa_set_calibration_values_once(tfa);
+		}
 
 	return err;
 }
