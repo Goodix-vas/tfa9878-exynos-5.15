@@ -3025,8 +3025,6 @@ enum tfa98xx_error tfa_set_calibration_values(struct tfa_device *tfa)
 
 	/* If calibration is set to once we load from MTP, else send zero's */
 	if (need_cal == 0) {
-		tfa98xx_set_tfadsp_bypass(tfa);
-
 		pr_info("%s: last dev %d - MTPEX=%d\n",
 			__func__, tfa->dev_idx, tfa->mtpex);
 
@@ -3216,6 +3214,8 @@ enum tfa98xx_error tfa_run_speaker_boost(struct tfa_device *tfa,
 	 */
 	if (value)
 		if (tfa->ext_dsp == 1)
+			if (tfa_count_status_flag(tfa, TFA_SET_CONFIG) > 0)
+				tfa98xx_set_tfadsp_bypass(tfa);
 			err = tfa_set_calibration_values_once(tfa);
 
 	return err;
@@ -3833,8 +3833,6 @@ enum tfa98xx_error tfa_wait_cal(struct tfa_device *tfa)
 	/* reset counter */
 	tfa_set_status_flag(tfa, TFA_SET_DEVICE, -1);
 	tfa_set_status_flag(tfa, TFA_SET_CONFIG, -1);
-
-	tfa98xx_set_tfadsp_bypass(tfa);
 
 	/*
 	 * restore profile after calibration.
