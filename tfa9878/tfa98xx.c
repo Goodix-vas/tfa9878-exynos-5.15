@@ -5607,6 +5607,10 @@ int tfa98xx_update_spkt_data(int idx)
 	}
 
 	ndev = tfa->dev_count;
+#if !defined(TFA_STEREO_NODE)
+	if (ndev == 1 && idx > 0)
+		idx = 0; /* use device 0 in mono, by force */
+#endif
 	if ((ndev < 1)
 		|| (idx < 0 || idx >= ndev))
 		return DEFAULT_REF_TEMP;
@@ -5703,6 +5707,10 @@ int tfa98xx_write_sknt_control(int idx, int value)
 	}
 
 	ndev = tfa->dev_count;
+#if !defined(TFA_STEREO_NODE)
+	if (ndev == 1 && idx > 0)
+		idx = 0; /* use device 0 in mono, by force */
+#endif
 	if ((ndev < 1)
 		|| (idx < 0 || idx >= ndev))
 		return -EINVAL;
